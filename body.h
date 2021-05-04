@@ -1,6 +1,7 @@
 #ifndef BODY_H
 #define BODY_H
 #include <box2d/box2d.h>
+#include <vector>
 
 class Body
 {
@@ -13,6 +14,11 @@ public:
     float density;
     float InvMass;
     float restitution;
+    int w;
+    int h;
+
+    void initRect(b2Vec2 pos, int w, int h);
+    b2Vec2 support(b2Vec2& d);
 
     float getDensity() const;
     void setDensity(float value);

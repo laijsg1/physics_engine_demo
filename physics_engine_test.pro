@@ -17,13 +17,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     body.cpp \
+    collision.cpp \
     main.cpp \
     dialog.cpp \
+    shape.cpp \
     world.cpp
 
 HEADERS += \
     body.h \
+    collision.h \
     dialog.h \
+    shape.h \
     world.h
 
 FORMS += \

@@ -20,14 +20,14 @@ SOURCES += \
     collision.cpp \
     main.cpp \
     dialog.cpp \
-    shape.cpp \
+    vec.cpp \
     world.cpp
 
 HEADERS += \
     body.h \
     collision.h \
     dialog.h \
-    shape.h \
+    vec.h \
     world.h
 
 FORMS += \

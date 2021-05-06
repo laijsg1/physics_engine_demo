@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QPainter>
 #include "world.h"
+//#include "shape.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Dialog; }

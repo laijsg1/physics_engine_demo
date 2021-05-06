@@ -32,18 +32,22 @@ void Dialog::initWorld()
 
     int w = 50;
     b = world->CreateBody(w,1.0);
-    b2Vec2 pos(200,450);
-    b->initRect(pos,w,w);
-    b->velocity.Set(5,0);
+//    b->position.Set(200,450);
+    b->position.Set(500,200);
+    Shape* sh = new Rect(b,w,w);
+    b->initRect(sh);
+    b->velocity.Set(0,5);
     b->force.SetZero();
 
 //    w = 1;
-    for(int i=0;i<40;i++){
+    for(int i=0;i<1;i++){
         b = world->CreateBody(w,1.0);
-        pos.Set(qrand()%size,qrand()%size);
-//        pos.Set(500,500);
-        b->initRect(pos,qrand()%10 + w, qrand()%10 +w);
-        b->velocity.Set(2,2);
+//        pos.Set(qrand()%size,qrand()%size);
+        b->position.Set(500,500);
+//        Shape* sh = new Rect(b,qrand()%10 + w, qrand()%10 +w);
+        Shape* sh = new Rect(b, 2*w, 2*w);
+        b->initRect(sh);
+        b->velocity.Set(0,0);
         b->force.SetZero();
     }
 
@@ -81,11 +85,12 @@ void Dialog::updateState(){
         pp.setPen(pen);
         pp.setBrush(brush);
         Body* b= world->bodyList[i];
-        float w = b->w;
-        float h = b->h;
-        int s = 2;
-//        pp.drawEllipse(b->position.x, b->position.y, r*s, r*s);
-        pp.drawRect(b->position.x, b->position.y, w*s, h*s);
+        b->shape->draw(pp);
+//        float w = b->w;
+//        float h = b->h;
+//        int s = 2;
+////        pp.drawEllipse(b->position.x, b->position.y, r*s, r*s);
+//        pp.drawRect(b->position.x, b->position.y, w*s, h*s);
 
     }
 

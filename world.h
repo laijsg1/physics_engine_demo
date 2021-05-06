@@ -12,6 +12,7 @@ public:
     void Step();
     void CollisionDetection();
     void ApplyImpulse(Body* a, Body* b);
+    void ApplyImpulse(Body* a, Body* b, std::vector<b2Vec2> contactPoints, b2Vec2 normal);
     void addBody(Body* b);
     Body* CreateBody(float r, float density);
     void BoundDetection(Body* b);
@@ -19,7 +20,8 @@ public:
 
 
     std::vector<Body*> bodyList;
-    std::stack<std::pair<Body*,Body*>> contacts;
+//    std::stack<std::pair<Body*,Body*>> contacts;
+    std::stack<Collision*> contacts;
     float dt;
 };
 

@@ -5,31 +5,22 @@ Body::Body()
 
 }
 
-void Body::initRect(b2Vec2 pos, int w, int h)
+b2Vec2 Body::center()
 {
-    position = pos;
-    this->w = w;
-    this->h = h;
+    return this->position;
 }
 
-b2Vec2 Body::support(b2Vec2 &d)
+void Body::ApplyImpulse(b2Vec2 impulse, b2Vec2 contactVector)
 {
-    std::vector<b2Vec2> vertices = {
-        b2Vec2(position.x-w, position.y+h),
-        b2Vec2(position.x+w, position.y+h),
-        b2Vec2(position.x+w, position.y-h),
-        b2Vec2(position.x-w, position.y-h)
-    };
-    float maxDistance = -FLT_MAX;
-    b2Vec2 maxVertex;
-    for(auto v: vertices){
-        float curDistance = b2Dot(d,v);
-        if(curDistance>maxDistance){
-            maxDistance = curDistance;
-            maxVertex = v;
-        }
-    }
-    return maxVertex;
+    velocity += InvMass * impulse;
+    angularVelocity += InvInertia * b2Cross(contactVector, impulse);
+}
+
+void Body::initRect( Shape* sh)
+{
+//    position = pos;
+    //这里应该clone的
+    shape = sh;
 }
 
 float Body::getRestitution() const

@@ -1,4 +1,4 @@
-#include "world.h"
+﻿#include "world.h"
 
 World::World()
 {
@@ -18,8 +18,11 @@ void World::Step()
 //        ApplyImpulse(contacts[i].first, contacts[i].second);
 //    }
     while(!contacts.empty()){
-        ApplyImpulse(contacts.top().first, contacts.top().second);
+        Collision* c = contacts.top();
+//        ApplyImpulse(c->body1, c->body2);
+        ApplyImpulse(c->body1, c->body2,c->contactPoints,c->p_n);
         contacts.pop();
+        delete c;
     }
 
     for(int i=0;i<(int)bodyList.size();i++){
@@ -42,9 +45,12 @@ void World::CollisionDetection()
 //            if(distance.LengthSquared()<= D*D){
 //                contacts.push(std::pair<Body*,Body*>(a,b));
 //            }
-            Collision collision;
-            if(collision.GJK(a,b)){
-                contacts.push(std::pair<Body*,Body*>(a,b));
+            Collision* collision = new Collision(a,b);
+            if(collision->GJK()){
+                collision->EPA();
+                collision->ContactPointGeneration();
+//                contacts.push(std::pair<Body*,Body*>(a,b));
+                contacts.push(collision);
             }
        }
    }
@@ -73,6 +79,38 @@ void World::ApplyImpulse(Body *a, Body *b)
 
 }
 
+void World::ApplyImpulse(Body *a, Body *b, std::vector<b2Vec2> contactPoints, b2Vec2 normal)
+{
+    for(auto point: contactPoints){
+        b2Vec2 ra = point - a->center();
+        b2Vec2 rb = point - b->center();
+
+        b2Vec2 rv = b->velocity + b2Cross(b->angularVelocity,rb);
+        rv -= (a->velocity + b2Cross(a->angularVelocity,ra));
+
+        float contactVel = b2Dot(rv, normal);
+
+        if(contactVel > 0) return;
+
+        float raCrossN = b2Cross(ra, normal);
+        float rbCrossN = b2Cross(rb, normal);
+
+        float invMassSum = a->InvMass + b->InvMass +
+                pow(raCrossN,2)* a->InvInertia +
+                pow(rbCrossN,2)* b->InvInertia;
+
+        float e = fmin(a->getRestitution(),b->getRestitution());
+        float j = -(1.0+e) * contactVel;
+        j /= invMassSum;
+        j /= (float)contactPoints.size();
+
+        b2Vec2 impulse = j * normal;
+        a->ApplyImpulse(-impulse, ra);
+        b->ApplyImpulse(impulse, rb);
+    }
+
+}
+
 void World::addBody(Body *b)
 {
     bodyList.push_back(b);
@@ -84,7 +122,9 @@ Body* World::CreateBody(float r, float density)
    b->setDensity(density);
    b->setRestitution(1);
    b->radius = r;
-   b->InvMass = 1.0f/(r * b->getDensity());
+   b->InvMass = 1.0f/(3.14 * r * r * b->getDensity());
+   b->angularVelocity = 0;
+   b->InvInertia = 1.0f/(r*r) * b->InvMass;
 
    bodyList.push_back(b);
    return b;

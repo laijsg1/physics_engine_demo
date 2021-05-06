@@ -159,7 +159,7 @@ bool Collision::ContactPointGeneration()
 
     //3. 从ref edge方向开始
 //    b2Vec2 refNorm = b2Cross(ref.edge,-1.0);
-    b2Vec2 refNorm = ref.Cross(1.0);
+    b2Vec2 refNorm = ref.Cross(-1.0);
 
     if(flip){
         refNorm *= -1;

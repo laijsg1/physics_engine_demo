@@ -37,12 +37,13 @@ void Dialog::initWorld()
     b->velocity.Set(5,0);
     b->force.SetZero();
 
-    for(int i=0;i<10;i++){
+//    w = 1;
+    for(int i=0;i<40;i++){
         b = world->CreateBody(w,1.0);
         pos.Set(qrand()%size,qrand()%size);
 //        pos.Set(500,500);
-        b->initRect(pos,w,w);
-        b->velocity.Set(3,3);
+        b->initRect(pos,qrand()%10 + w, qrand()%10 +w);
+        b->velocity.Set(2,2);
         b->force.SetZero();
     }
 
@@ -80,10 +81,12 @@ void Dialog::updateState(){
         pp.setPen(pen);
         pp.setBrush(brush);
         Body* b= world->bodyList[i];
-        float r = b->radius;
+        float w = b->w;
+        float h = b->h;
         int s = 2;
 //        pp.drawEllipse(b->position.x, b->position.y, r*s, r*s);
-        pp.drawRect(b->position.x, b->position.y, r*s, r*s);
+        pp.drawRect(b->position.x, b->position.y, w*s, h*s);
+
     }
 
     update();

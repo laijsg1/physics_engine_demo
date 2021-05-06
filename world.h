@@ -1,7 +1,9 @@
 #ifndef WORLD_H
 #define WORLD_H
 #include "body.h"
+#include "collision.h"
 #include <vector>
+#include <stack>
 
 class World
 {
@@ -14,15 +16,10 @@ public:
     Body* CreateBody(float r, float density);
     void BoundDetection(Body* b);
 
-    bool GJK(Body* a, Body* b);
-    b2Vec2 FindSupportPoint(Body* a, Body* b, b2Vec2& d);
-    bool handleSimplex(std::vector<b2Vec2>& simplex, b2Vec2& d);
-    bool lineCase(std::vector<b2Vec2>& simplex, b2Vec2& d);
-    bool triangleCase(std::vector<b2Vec2>& simplex, b2Vec2& d);
-    b2Vec2 tripleProd(b2Vec2& a, b2Vec2& b,b2Vec2& c);
+
 
     std::vector<Body*> bodyList;
-    std::vector<std::pair<Body*,Body*>> contacts;
+    std::stack<std::pair<Body*,Body*>> contacts;
     float dt;
 };
 

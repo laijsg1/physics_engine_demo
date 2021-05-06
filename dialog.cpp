@@ -40,14 +40,14 @@ void Dialog::initWorld()
     b->force.SetZero();
 
 //    w = 1;
-    for(int i=0;i<1;i++){
-        b = world->CreateBody(w,1.0);
-//        pos.Set(qrand()%size,qrand()%size);
-        b->position.Set(500,500);
+    for(int i=0;i<5;i++){
+        b = world->CreateBody(1.5*w,1.0);
+      b->position.Set(qrand()%size,qrand()%size);
+//        b->position.Set(450,500);
 //        Shape* sh = new Rect(b,qrand()%10 + w, qrand()%10 +w);
-        Shape* sh = new Rect(b, 2*w, 2*w);
+        Shape* sh = new Rect(b, 2*w, w);
         b->initRect(sh);
-        b->velocity.Set(0,0);
+        b->velocity.Set(2,5);
         b->force.SetZero();
     }
 

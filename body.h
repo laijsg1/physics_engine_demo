@@ -31,6 +31,9 @@ public:
 
     float angularVelocity;
     float InvInertia;
+    float orient;
+
+    void setOrient(float radians);
 
     b2Vec2 center();
     void ApplyImpulse(b2Vec2 impulse,b2Vec2 contactVector);
@@ -53,6 +56,7 @@ public:
     virtual int findSupportPointIx(b2Vec2& d){}
     virtual b2Vec2 getVertex(int ix){}
     virtual void draw(QPainter& pp) = 0;
+    virtual void setOrient(float radians)=0;
 
 };
 
@@ -70,6 +74,7 @@ public:
             b2Vec2(-w, -h)
         };
         q.SetIdentity();
+//        q.Set(0.45);
     }
     virtual b2Vec2 findSupportPoint(b2Vec2& d){
         b2Vec2 position = body->position;
@@ -77,6 +82,7 @@ public:
         float maxDistance = -FLT_MAX;
         b2Vec2 maxVertex;
         for(auto v: vertices){
+            v = Rotate(v);
             v += position;
             float curDistance = b2Dot(d,v);
             if(curDistance>maxDistance){
@@ -91,7 +97,7 @@ public:
         float maxDistance = -FLT_MAX;
         int maxIndex;
         for(int i=0;i<(int)vertices.size();i++){
-            b2Vec2 v = vertices[i] + position;
+            b2Vec2 v = Rotate(vertices[i]) + position;
             float curDistance = b2Dot(d,v);
             if(curDistance>maxDistance){
                 maxDistance = curDistance;
@@ -104,19 +110,27 @@ public:
         b2Vec2 position = body->position;
         int len = vertices.size();
         //先加上len是为了处理ix为负数的情况
-        return vertices[(ix+len)%len] + position;
+        return Rotate(vertices[(ix+len)%len]) + position;
     }
     virtual void draw(QPainter& pp){
         int s = 3;
 //        pp.drawRect(body->position.x, body->position.y, w*s, h*s);
         QPoint rect[4];
         for(int i=0;i<(int)vertices.size();i++){
-            b2Vec2 p = vertices[i]+body->position;
+            b2Vec2 p = Rotate(vertices[i])+body->position;
             rect[i].setX(p.x);
             rect[i].setY(p.y);
         }
         pp.drawPolygon(rect,4);
 
+    }
+    virtual void setOrient(float radians){
+        q.Set(radians);
+    };
+
+    b2Vec2 Rotate(b2Vec2& v){
+        b2Mat22 R(q.GetXAxis().x,q.GetXAxis().y,q.GetYAxis().x,q.GetYAxis().y);
+        return b2Mul(R,v);
     }
     std::vector<b2Vec2> vertices;
     Body* body;

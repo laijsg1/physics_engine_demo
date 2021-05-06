@@ -29,6 +29,8 @@ void World::Step()
         Body* b = bodyList[i];
 //        b->velocity += dt * b->force;
         b->position += dt * b->velocity;
+        b->orient += dt * b->angularVelocity;
+        b->setOrient(b->orient);
         BoundDetection(b);
     }
 

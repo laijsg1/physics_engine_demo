@@ -2,7 +2,13 @@
 
 Body::Body()
 {
+    orient = 0;
+}
 
+void Body::setOrient(float radians)
+{
+    orient = radians;
+    shape->setOrient(radians);
 }
 
 b2Vec2 Body::center()
